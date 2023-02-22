@@ -105,6 +105,43 @@ Proves i exercicis a fer i entregar
 
 1. Reprodueix l'exemple fent servir diferents freqüències per la sinusoide. Al menys considera $f_x = 4$ kHz, a banda d'una
     freqüència pròpia en el marge audible. Comenta els resultats.
+    ```python
+    ##Exercici 1
+    #Prova 1 amb Fx = 4kHz
+    fx2 = 4000
+    x2 = A * np.cos(2 * pi * fx2 * t)      
+    sf.write('so_exemple2.wav', x2, fm)   
+
+    Tx2=1/fx2                                  # Període del senyal
+    Ls=int(fm*5*Tx2)                           # Nombre de mostres corresponents a 5 períodes de la sinusoide
+
+    plt.figure(0)                             # Nova figura
+    plt.plot(t[0:Ls], x2[0:Ls])                # Representació del senyal en funció del temps
+    plt.xlabel('t en segons')                 # Etiqueta eix temporal
+    plt.title('5 periodes de la sinusoide')   # Títol del gràfic
+    plt.show() 
+
+    sd.play(x2, fm)  
+
+    #Prova 2 amb Fx = 40Hz
+    fx3 = 40
+    x3 = A * np.cos(2 * pi * fx3 * t)      
+    sf.write('so_exemple3.wav', x3, fm)   
+
+    Tx3=1/fx3                                 # Període del senyal
+    Ls=int(fm*5*Tx3)                           # Nombre de mostres corresponents a 5 períodes de la sinusoide
+
+    plt.figure(0)                             # Nova figura
+    plt.plot(t[0:Ls], x3[0:Ls])                # Representació del senyal en funció del temps
+    plt.xlabel('t en segons')                 # Etiqueta eix temporal
+    plt.title('5 periodes de la sinusoide')   # Títol del gràfic
+    plt.show() 
+
+    sd.play(x3, fm)
+
+    ´´´
+    Comentaris:
+    En la primera prova podem observar com 
 
 2. Modifica el programa per considerar com a senyal a analitzar el senyal del fitxer wav que has creat 
     (`x_r, fm = sf.read('nom_fitxer.wav')`).
