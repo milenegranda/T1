@@ -105,13 +105,154 @@ Proves i exercicis a fer i entregar
 
 1. Reprodueix l'exemple fent servir diferents freqüències per la sinusoide. Al menys considera $f_x = 4$ kHz, a banda d'una
     freqüència pròpia en el marge audible. Comenta els resultats.
+```python
+    
+   #Prova 1 amb Fx = 4kHz
+    fx2 = 4000
+    x2 = A * np.cos(2 * pi * fx2 * t)      
+    sf.write('so_exemple2.wav', x2, fm)   #Creacio del nou so amb Fx=4kHz
+
+    Tx2=1/fx2                                  # Període del senyal amb fx= 4kHz
+    Ls=int(fm*5*Tx2)                           
+
+    plt.figure(0)                             
+    plt.plot(t[0:Ls], x2[0:Ls])                
+    plt.xlabel('t en segons')                 
+    plt.title('5 periodes de la sinusoide amb Fx=4kHz')   
+    plt.show() 
+```
+El resultat de la gràfica és
+    
+<img src="img/Figure_0.png" width="480" align="center">
+
+
+
+Per escoltar-lo:
+ ```python
+    sd.play(x2, fm)   #Reproducció so 
+```    
+Per poder trobar la seva transformada:
+```python
+    N=5000                        
+    X2=fft(x2[0 : Ls], N)           
+
+    k=np.arange(N)                        
+
+    plt.figure(1)                         
+    plt.subplot(211)                      
+    plt.plot(k,abs(X2))                    
+    plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   
+    plt.ylabel('|X[k]|')                  
+    plt.subplot(212)                      
+    plt.plot(k,np.unwrap(np.angle(X2)))    
+    plt.xlabel('Index k')                 
+    plt.ylabel('$\phi_x[k]$')             
+    plt.show()                            
+```
+Trobant així la grafica següent:
+<img src="img/TF1.png" width="480" align="center">
+ 
+```python
+#Prova 2 amb Fx = 40Hz
+    fx3 = 40 #Nova freq Fx= 40Hz
+    x3 = A * np.cos(2 * pi * fx3 * t)      
+    sf.write('so_exemple3.wav', x3, fm)   #Creació del fitxer wav amb Fx=40Hz
+
+    Tx3=1/fx3                                 
+    Ls=int(fm*5*Tx3)                           
+
+    plt.figure(0)                             
+    plt.plot(t[0:Ls], x3[0:Ls])                
+    plt.xlabel('t en segons')                 
+    plt.title('5 periodes de la sinusoide amb Fx=40Hz')   
+    plt.show()
+```
+Resultant així la següent gràfica:
+<img src="img/fig2.png" width="480" align="center">
+
+Per escoltar-lo:
+```python
+    sd.play(x3, fm)  #Reproducció del nou so
+```
+Per poder trobar la seva transfomada:
+```python
+    X3=fft(x2[0 : Ls], N)           
+
+    k=np.arange(N)                        
+
+    plt.figure(2)                         
+    plt.subplot(211)                      
+    plt.plot(k,abs(X3))                    
+    plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   
+    plt.ylabel('|X[k]|')                  
+    plt.subplot(212)                      
+    plt.plot(k,np.unwrap(np.angle(X3)))    
+    plt.xlabel('Index k')                  
+    plt.ylabel('$\phi_x[k]$')             
+    plt.show()                            
+```
+Trobant així la grafica següent:
+<img src="img/TF2.png" width="480" align="center">
+
+### Comentaris:
+Podem observar com en aquest primer cas en la primera gràfica els 5 períodes tenen un temps de durada d'1 ms aproximadament. Així mateix, podem veure que conté una amplitud de 4 ms.
+
+Seguidament per al mateix cas, en la gràfica on representa la seva transformada es veu una funció sinc de mòdul 40 on es conté unes 10 mostres per als períodes aplicats.
+
+Per al segon cas observem com en la primera gràfica els 5 períodes a diferència del primer cas tenen una durada més gran, d'uns 0,12 segons aproximadament. De manera similar al cas anterior encara tenen una amplitud de 4 ms.
+
+A continuació podem veure com en la seva TF s'hi representa un sol pols de mòdul 4000.
+
+
 
 2. Modifica el programa per considerar com a senyal a analitzar el senyal del fitxer wav que has creat 
     (`x_r, fm = sf.read('nom_fitxer.wav')`).
-
+    ```python
+    x_r,fm=sf.read('so_exemple2.wav') # Agafem el so creat en el cas 1 del ex1
+    #Importem la info del 'so_exemple2.wav'
+    Tm =1/fm
+    t=Tm*np.arange(len(x_r))
+    sf.write('so_ex2.wav',x_r,fm) #Creem un nou so per l'ex2
+    ```
     - Insereix a continuació una gràfica que mostri 5 períodes del senyal i la seva transformada.
 
-    - Explica el resultat del apartat anterior.
+    Per poder obtenir aquesta gràfica realitzem el següent codi:
+    ```python
+    fx=4000
+    Tx=1/fx                                   # Període del senyal
+    Ls=int(fm*5*Tx)                           # Nombre de mostres corresponents a 5 períodes de la sinusoide
+
+    plt.figure(21)                             
+    plt.plot(t[0:Ls], x_r[0:Ls])                
+    plt.xlabel('t en segons')              
+    plt.title('5 periodes de la sinusoide, Ex 2')   
+    plt.show()    
+    ```
+Obtenint la següent gràfica:
+<img src="img/fig3.png" width="480" align="center">
+
+Per obtenir la gràfica de la transformada:
+```python
+N=5000
+XR =fft(x_r[0:Ls],N)
+k=np.arange(N)                        
+
+plt.figure(1)                         
+plt.subplot(211)                      
+plt.plot(k,abs(XR))                    
+plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   
+plt.ylabel('|X[k]|')                  
+plt.subplot(212)                      
+plt.plot(k,np.unwrap(np.angle(XR)))    
+plt.xlabel('Index k')                 
+plt.ylabel('$\phi_x[k]$')             
+plt.show()   
+```
+Obtenint la següent gràfica:
+<img src="img/TF3.png" width="480" align="center">
+ - Explica el resultat del apartat anterior.
+
+A causa de que en aquest exercici s'ha fet ús del fitxer anterior on Fx = 4kHz s'observa com les gràfiques son idèntiques al exercici 1.
 
 3. Modifica el programa per representar el mòdul de la Transformada de Fourier en dB i l'eix d'abscisses en el marge de
     $0$ a $f_m/2$ en Hz.
@@ -137,7 +278,7 @@ Proves i exercicis a fer i entregar
     - Freqüència de mostratge.
     - Nombre de mostres de senyal.
     - Tria un segment de senyal de 25ms i insereix una gráfica amb la seva evolució temporal.
-    - Representa la seva transformada en dB en funció de la freqüència, en el marge $f_m\le f\le f_m/2$.
+    - Representa la seva transformada en dB en funció de la freqüència, en el marge $0\le f\le f_m/2$.
     - Quines son les freqüències més importants del segment triat?
 
 
