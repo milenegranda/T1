@@ -251,7 +251,7 @@ plt.ylabel('$\phi_x[k]$')
 plt.show()   
 ```
 Obtenint la següent gràfica:
-<img src="img/TF3.png" width="480" align="center">
+<img src="img/tf3.png" width="480" align="center">
  - Explica el resultat del apartat anterior.
 
 A causa que en aquest exercici s'ha fet ús del fitxer anterior on Fx = 4 kHz s'observa com les gràfiques són idèntiques a l'exercici 1.
