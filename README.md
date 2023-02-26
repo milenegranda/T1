@@ -199,9 +199,11 @@ Podem observar com en aquest primer cas en la primera gràfica els 5 períodes t
 
 Seguidament per al mateix cas, en la gràfica on representa la seva transformada es veu una funció sinc de mòdul 40 on es conté unes 10 mostres per als períodes aplicats.
 
-Per al segon cas observem com en la primera gràfica els 5 períodes a diferència del primer cas tenen una durada més gran, d'uns 0,12 segons aproximadament. De manera similar al cas anterior encara tenen una amplitud de 4 ms.
+Per al segon cas veiem com en la primera gràfica els 5 períodes a diferència del primer cas tenen una durada més gran, d'uns 0,12 segons aproximadament. De manera similar al cas anterior encara tenen una amplitud de 4 ms.
 
 A continuació podem veure com en la seva TF s'hi representa un sol pols de mòdul 4000.
+
+
 
 
 
@@ -252,15 +254,52 @@ Obtenint la següent gràfica:
 <img src="img/TF3.png" width="480" align="center">
  - Explica el resultat del apartat anterior.
 
-A causa de que en aquest exercici s'ha fet ús del fitxer anterior on Fx = 4kHz s'observa com les gràfiques son idèntiques al exercici 1.
+A causa que en aquest exercici s'ha fet ús del fitxer anterior on Fx = 4 kHz s'observa com les gràfiques són idèntiques a l'exercici 1.
 
 3. Modifica el programa per representar el mòdul de la Transformada de Fourier en dB i l'eix d'abscisses en el marge de
     $0$ a $f_m/2$ en Hz.
 
-    - Comprova que la mesura de freqüència es correspon amb la freqüència de la sinusoide que has fet servir.
+    Per realitzar aquesta modificació realitzem el següent codi:
 
-    - Com pots identificar l'amplitud de la sinusoide a partir de la representació de la transformada?
+    ```python
+    T=2.5
+    fm = 8000
+    fx=440
+    A=4
+    pi=np.pi
+    L=int(fm*T)
+    Tm=1/fm
+    t=Tm*np.arange(L)
+    x=A*np.cos(2*pi*fx*t)
+    sf.write('so_ex3.wav',x,fm)
+
+    Tx=1/fx                                   
+    Ls=int(fm*5*Tx)                           
+
+    N=5000                       
+    X=fft(x[0 : Ls], N) 
+    k=np.arange(N)                        
+    fk = k/N*fm  #Trobem fk per a l'eix d'abscisses de la gràfica
+    plt.figure(1)                         
+    plt.subplot(211)                      
+    plt.plot(fk/2,abs(20*np.log10(X/max(X))))   # Representem el mòul de la Transformada tal i com se'ns demana (0 a fk/2) i en dB                 
+    plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   # Etiqueta del títol
+    plt.ylabel('|X[k]|')                  
+    plt.subplot(212)                      
+    plt.plot(k,np.unwrap(np.angle(X)))    
+    plt.xlabel('Index k')                  
+    plt.ylabel('$\phi_x[k]$')             
+    plt.show() 
+    ```
+Trobant així la gràfica següent:
+<img src="img/TF4.png" width="480" align="center">
+    
+- Comprova que la mesura de freqüència es correspon amb la freqüència de la sinusoide que has fet servir.
+
+ - Com pots identificar l'amplitud de la sinusoide a partir de la representació de la transformada? 
       Comprova-ho amb el senyal generat.
+    
+    Aquesta amplitud no es pot trobar a través d'aquesta gràfica, ja que en normalitzar pel màxim el resultat és 1.
 
 > NOTES:
 >
@@ -279,8 +318,52 @@ A causa de que en aquest exercici s'ha fet ús del fitxer anterior on Fx = 4kHz 
     - Nombre de mostres de senyal.
     - Tria un segment de senyal de 25ms i insereix una gráfica amb la seva evolució temporal.
     - Representa la seva transformada en dB en funció de la freqüència, en el marge $0\le f\le f_m/2$.
-    - Quines son les freqüències més importants del segment triat?
 
+    Per aquest exercici he fet ús de l'àudio 'luzbel44.wav', fent ús del codi que s'exposa a continuació:
+    ```python
+    x_r,fm=sf.read('luzbel44.wav') 
+    T= 0.025                                                     
+    Ls = int(fm * T)                      
+    Tm=1/fm                              
+    t=Tm*np.arange(Ls)                    
+    sf.write('so_exercici4.wav', x_r, fm)   
+                                    
+    plt.figure(0)                            
+    plt.plot(t[0:Ls], x_r[0:Ls])              
+    plt.xlabel('t en segons')                 
+    plt.title('Gràfica ex4')   
+    plt.show() 
+    ```
+    <img src="img/Luzbel.png" width="480" align="center">
+   
+    ```python
+    N=5000                       
+    X=fft(x_r[0 : Ls], N)          
+
+    k=np.arange(N)                        
+
+    sd.play(x_r, fm) 
+
+    N=5000                       
+    X=fft(x_r[0 : Ls], N) 
+    k=np.arange(N)   
+    Xdb=20*np.log10(np.abs(X)/max(np.abs(X)))                     
+    fk = k[0:N//2+1]*fm/N  #Trobem fk per a l'eix d'abscisses de la gràfica
+    plt.figure(1)                         
+    plt.subplot(211)                      
+    plt.plot(fk,Xdb[0:N//2+1])   # Representem el mòul de la Transformada tal i com se'ns demana (0 a fk/2) i en dB                 
+    plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   # Etiqueta del títol
+    plt.ylabel('|X[k]|en dB')                  
+    plt.subplot(212)                      
+    plt.plot(fk,np.unwrap(np.angle(X[0:N//2+1])))    
+    plt.ylabel('$\phi_x[k]$')             
+    plt.show()  
+    ```
+<img src="img/LuzbelTF.png" width="480" align="center">
+
+- Quines son les freqüències més importants del segment triat?
+   
+    Les freqüències més importants que s'observen a la gràfica són aproximadament des de la de 2 kHz fins a la de 8 kHz. 
 
 Entrega
 -------
